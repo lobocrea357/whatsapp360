@@ -35,6 +35,19 @@ app.get('/conversations', (req, res) => {
     });
 });
 
+// Endpoint para servir la imagen del QR
+app.get('/qr', (req, res) => {
+    const qrPath = path.join(process.cwd(), 'bot.qr.png');
+    fs.access(qrPath, fs.constants.F_OK, (err) => {
+        if (err) {
+            // Si el QR no existe todavía, envía un 404
+            return res.status(404).send('QR code not generated yet.');
+        }
+        // Envía el archivo de imagen
+        res.sendFile(qrPath);
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`✅ Servidor de API escuchando en http://localhost:${PORT}`);
 });

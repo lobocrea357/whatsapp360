@@ -9,9 +9,9 @@ services:
       - ./base-js-baileys-json/.env
     ports:
       - "3009:3009"
-      - "3008:3008"
     volumes:
-      - ./base-js-baileys-json/bot_sessions:/app/bot_sessions
+      - ./base-js-baileys-json:/app
+      - /app/node_modules
 
   dashboard:
     build:
