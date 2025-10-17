@@ -1,38 +1,28 @@
-# Image size ~ 400MB
-FROM node:21-alpine3.18 as builder
-
+# Etapa 1: Build
+# Usar una imagen completa de Debian para asegurar compatibilidad con la compilación nativa
+FROM node:21-bookworm AS builder
 WORKDIR /app
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
-ENV PNPM_HOME=/usr/local/bin
+# Copiar archivos de manifiesto e instalar TODAS las dependencias
+COPY package.json package-lock.json ./
+RUN npm install
 
+# Copiar el resto del código fuente
 COPY . .
 
-COPY package*.json *-lock.yaml ./
-
-RUN apk add --no-cache --virtual .gyp \
-        python3 \
-        make \
-        g++ \
-    && apk add --no-cache git \
-    && pnpm install \
-    && apk del .gyp
-
-FROM node:21-alpine3.18 as deploy
-
+# Etapa 2: Producción
+# Usar una imagen "slim" para reducir el tamaño final
+FROM node:21-bookworm-slim AS production
 WORKDIR /app
 
+# Copiar dependencias de producción desde la etapa de construcción
+COPY --from=builder /app/node_modules ./node_modules
+# Copiar el código fuente de la aplicación
+COPY --from=builder /app ./
+
+# Exponer los puertos necesarios
 EXPOSE 3009
 EXPOSE 3008
 
-COPY --from=builder /app ./
-COPY --from=builder /app/*.json /app/*-lock.yaml ./
-
-RUN corepack enable && corepack prepare pnpm@latest --activate 
-ENV PNPM_HOME=/usr/local/bin
-
-RUN npm cache clean --force && pnpm install --production --ignore-scripts \
-    && addgroup -g 1001 -S nodejs && adduser -S -u 1001 nodejs \
-    && rm -rf $PNPM_HOME/.npm $PNPM_HOME/.node-gyp
-
+# Comando para iniciar la aplicación
 CMD ["npm", "run", "dev"]
