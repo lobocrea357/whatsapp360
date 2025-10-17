@@ -1,40 +1,29 @@
 # Usa una imagen base de Node.js
 FROM node:18-alpine AS base
 
-# Establece el directorio de trabajo
-WORKDIR /app
-
-# Copia los archivos de manifiesto del paquete
-COPY package.json ./
-COPY package-lock.json ./
-
-# --- Dependencias ---
+# 1. Etapa de Instalación de Dependencias
 FROM base AS deps
-# Instala las dependencias
-RUN npm install
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm install --production
 
-# --- Builder ---
+# 2. Etapa de Construcción
 FROM base AS builder
-# Copia las dependencias instaladas
+WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-# Copia el resto de los archivos de la aplicación
 COPY . .
-# Construye la aplicación
 RUN npm run build
 
-# --- Runner ---
+# 3. Etapa de Producción Final
 FROM base AS runner
-# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia los artefactos de construcción
+ENV NODE_ENV=production
+
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Expone el puerto en el que se ejecuta la aplicación
-EXPOSE 3000
-
-# Comando para iniciar la aplicación
-CMD ["npm", "start"]
+# El servidor se inicia desde server.js en la carpeta standalone
+CMD ["node", "server.js"]
