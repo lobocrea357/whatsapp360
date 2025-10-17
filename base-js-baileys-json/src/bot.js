@@ -67,7 +67,10 @@ const main = async () => {
             provider: adapterProvider,
             database: adapterDB,
         }, {
-            port: 3001
+            port: 3001,
+            httpServer: {
+                port: 3008
+            }
         })
         
         console.log('Instancia del bot creada.')
