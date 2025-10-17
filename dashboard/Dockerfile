@@ -6,7 +6,8 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm install --production
+# Instala TODAS las dependencias, incluidas las de desarrollo para la compilación
+RUN npm install
 
 # 2. Etapa de Construcción
 FROM base AS builder
