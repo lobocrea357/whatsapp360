@@ -12,7 +12,7 @@ export default function Home() {
     const fetchConversations = async () => {
       try {
         setError(null)
-        const response = await axios.get('http://bot:3009/conversations')
+        const response = await axios.get('/api/conversations')
         const sortedConversations = response.data.sort((a, b) => {
           const lastMsgA = a.messages[a.messages.length - 1];
           const lastMsgB = b.messages[b.messages.length - 1];
@@ -79,7 +79,7 @@ export default function Home() {
       {/* Sidebar */}
       <aside className="w-1/3 flex flex-col bg-whatsapp-sidebar border-r border-whatsapp-border">
         <header className="p-4 border-b border-whatsapp-border bg-whatsapp-header flex items-center">
-          <img src='http://localhost:3008' alt='botqr' width={100}/>
+          <img src='/qr' alt='botqr' width={100}/>
           <h1 className="text-3xl font-bold text-whatsapp-text-primary ml-4">Bot #1 JosniB</h1>
         </header>
         <div className="flex-1 overflow-y-auto">
