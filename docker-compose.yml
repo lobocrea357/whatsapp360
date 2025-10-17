@@ -1,0 +1,24 @@
+
+services:
+  bot:
+    build:
+      context: ./base-js-baileys-json
+    container_name: bot_service
+    restart: always
+    env_file:
+      - ./base-js-baileys-json/.env
+    ports:
+      - "3009:3009"
+      - "3008:3008"
+    volumes:
+      - ./base-js-baileys-json/bot_sessions:/app/bot_sessions
+
+  dashboard:
+    build:
+      context: ./dashboard
+    container_name: dashboard_service
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - bot
