@@ -1,0 +1,215 @@
+═══════════════════════════════════════════════════════════════
+  COMANDOS ÚTILES - Bot de WhatsApp en Google Cloud VM
+═══════════════════════════════════════════════════════════════
+
+📋 COPIA Y PEGA ESTOS COMANDOS EN TU VM DE GOOGLE CLOUD
+
+──────────────────────────────────────────────────────────────
+1️⃣  CONFIGURAR FIREWALL (Solo la primera vez)
+──────────────────────────────────────────────────────────────
+
+gcloud compute firewall-rules create allow-bot-qr --allow tcp:3009 --source-ranges 0.0.0.0/0 --description "Permitir acceso al QR del bot de WhatsApp"
+
+
+──────────────────────────────────────────────────────────────
+2️⃣  OBTENER TU IP EXTERNA
+──────────────────────────────────────────────────────────────
+
+curl -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip
+
+
+──────────────────────────────────────────────────────────────
+3️⃣  INICIAR/REINICIAR LOS CONTENEDORES
+──────────────────────────────────────────────────────────────
+
+# Navegar al directorio del proyecto
+cd /ruta/a/tu/proyecto/bot
+
+# Detener contenedores
+docker-compose down
+
+# Iniciar contenedores
+docker-compose up -d
+
+# Ver logs en tiempo real
+docker logs -f bot_service
+
+
+──────────────────────────────────────────────────────────────
+4️⃣  VERIFICAR ESTADO
+──────────────────────────────────────────────────────────────
+
+# Ver contenedores corriendo
+docker ps
+
+# Ver logs del bot
+docker logs bot_service
+
+# Ver últimas 50 líneas de logs
+docker logs --tail 50 bot_service
+
+# Verificar puerto 3009
+netstat -tuln | grep 3009
+
+# Verificar estado de autenticación (reemplaza IP_EXTERNA)
+curl http://IP_EXTERNA:3009/status
+
+
+──────────────────────────────────────────────────────────────
+5️⃣  LIMPIAR SESIONES (Si hay problemas de autenticación)
+──────────────────────────────────────────────────────────────
+
+# Detener contenedores
+docker-compose down
+
+# Eliminar sesiones antiguas
+rm -rf base-js-baileys-json/bot_sessions/*
+
+# Eliminar QR antiguo
+rm -f base-js-baileys-json/bot.qr.png
+
+# Reiniciar contenedores
+docker-compose up -d
+
+
+──────────────────────────────────────────────────────────────
+6️⃣  ACCEDER AL QR (Abre en tu navegador)
+──────────────────────────────────────────────────────────────
+
+http://TU_IP_EXTERNA:3009
+
+Reemplaza TU_IP_EXTERNA con la IP que obtuviste en el paso 2
+
+
+──────────────────────────────────────────────────────────────
+7️⃣  ENDPOINTS DISPONIBLES
+──────────────────────────────────────────────────────────────
+
+# Interfaz web con QR
+http://TU_IP_EXTERNA:3009/
+
+# Solo la imagen del QR
+http://TU_IP_EXTERNA:3009/qr
+
+# Estado de autenticación (JSON)
+http://TU_IP_EXTERNA:3009/status
+
+# Conversaciones guardadas (JSON)
+http://TU_IP_EXTERNA:3009/conversations
+
+
+──────────────────────────────────────────────────────────────
+8️⃣  CERRAR FIREWALL (Después de autenticar)
+──────────────────────────────────────────────────────────────
+
+gcloud compute firewall-rules delete allow-bot-qr
+
+
+──────────────────────────────────────────────────────────────
+9️⃣  DEBUGGING AVANZADO
+──────────────────────────────────────────────────────────────
+
+# Entrar al contenedor
+docker exec -it bot_service /bin/bash
+
+# Ver archivos de sesión
+ls -la base-js-baileys-json/bot_sessions/
+
+# Ver archivo QR
+ls -la base-js-baileys-json/bot.qr.png
+
+# Ver base de datos
+cat base-js-baileys-json/db.json
+
+# Reiniciar solo el servicio del bot
+docker-compose restart bot
+
+# Reconstruir contenedores (si cambiaste código)
+docker-compose up -d --build
+
+
+──────────────────────────────────────────────────────────────
+🔟  MONITOREO
+──────────────────────────────────────────────────────────────
+
+# Ver uso de recursos
+docker stats bot_service
+
+# Ver todos los logs con timestamps
+docker logs -f --timestamps bot_service
+
+# Ver solo errores
+docker logs bot_service 2>&1 | grep -i error
+
+
+──────────────────────────────────────────────────────────────
+🆘  SOLUCIÓN DE PROBLEMAS COMUNES
+──────────────────────────────────────────────────────────────
+
+PROBLEMA: "Connection refused" al acceder a http://IP:3009
+SOLUCIÓN:
+  1. Verificar firewall: gcloud compute firewall-rules list
+  2. Verificar contenedor: docker ps | grep bot_service
+  3. Verificar puerto: netstat -tuln | grep 3009
+
+PROBLEMA: QR no aparece en la página
+SOLUCIÓN:
+  1. Esperar 30 segundos después de iniciar
+  2. Ver logs: docker logs bot_service
+  3. Refrescar la página (F5)
+
+PROBLEMA: "ERROR AUTH" repetido
+SOLUCIÓN:
+  1. docker-compose down
+  2. rm -rf base-js-baileys-json/bot_sessions/*
+  3. docker-compose up -d
+  4. Esperar 30 segundos y escanear QR rápidamente
+
+PROBLEMA: El bot se desconecta constantemente
+SOLUCIÓN:
+  1. Verificar que los volúmenes estén montados correctamente
+  2. No eliminar la carpeta bot_sessions/
+  3. Verificar logs: docker logs bot_service
+
+
+──────────────────────────────────────────────────────────────
+📝  NOTAS IMPORTANTES
+──────────────────────────────────────────────────────────────
+
+✅ El QR expira cada 60 segundos
+✅ La página web se actualiza automáticamente cada 30 segundos
+✅ Una vez autenticado, la sesión se guarda en bot_sessions/
+✅ No necesitas escanear el QR nuevamente después de autenticar
+✅ El puerto 3009 debe estar abierto en el firewall
+✅ Usa la IP EXTERNA de tu VM, no localhost
+✅ Después de autenticar, puedes cerrar el puerto 3009
+
+
+──────────────────────────────────────────────────────────────
+🎯  FLUJO COMPLETO DE CONFIGURACIÓN
+──────────────────────────────────────────────────────────────
+
+1. Abrir firewall (comando del paso 1)
+2. Obtener IP externa (comando del paso 2)
+3. Iniciar contenedores (comando del paso 3)
+4. Esperar 30 segundos
+5. Abrir navegador en http://TU_IP:3009
+6. Escanear QR con WhatsApp
+7. Verificar autenticación en http://TU_IP:3009/status
+8. Cerrar firewall (comando del paso 8)
+9. ¡Listo! El bot está funcionando
+
+
+──────────────────────────────────────────────────────────────
+📚  ARCHIVOS DE DOCUMENTACIÓN
+──────────────────────────────────────────────────────────────
+
+• SOLUCION_RAPIDA.md      - Resumen ejecutivo del problema y solución
+• INSTRUCCIONES_QR.md     - Guía completa paso a paso
+• setup-qr.sh             - Script de configuración automática
+• COMANDOS_UTILES.txt     - Este archivo
+
+
+═══════════════════════════════════════════════════════════════
+  ¿Necesitas ayuda? Revisa los logs: docker logs -f bot_service
+═══════════════════════════════════════════════════════════════

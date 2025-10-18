@@ -8,7 +8,8 @@ services:
     env_file:
       - ./base-js-baileys-json/.env
     ports:
-      - "3009:3009"
+      - "3009:3009"  # API Server (incluye endpoint /qr)
+      - "3001:3001"  # Bot HTTP Server
     volumes:
       - ./base-js-baileys-json:/app
       - /app/node_modules

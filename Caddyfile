@@ -1,0 +1,91 @@
+# Configuración de Caddy para WhatsApp Bot con Baileys
+# Este archivo debe estar en /etc/caddy/Caddyfile o donde tengas configurado Caddy
+
+testbot.novapolointranet.xyz {
+    # Habilitar logs para debugging
+    log {
+        output file /var/log/caddy/testbot.log
+        level INFO
+    }
+
+    # Endpoint para la interfaz web del QR (página principal)
+    reverse_proxy / localhost:3009 {
+        # Headers necesarios para CORS
+        header_up Host {upstream_hostport}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+        
+        # Timeouts más largos para la carga inicial
+        transport http {
+            dial_timeout 30s
+            response_header_timeout 30s
+        }
+    }
+
+    # Endpoint para el código QR (imagen)
+    reverse_proxy /qr localhost:3009 {
+        header_up Host {upstream_hostport}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+    }
+
+    # Endpoint para verificar estado de autenticación
+    reverse_proxy /status localhost:3009 {
+        header_up Host {upstream_hostport}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+    }
+
+    # Endpoint para las conversaciones
+    reverse_proxy /conversations localhost:3009 {
+        header_up Host {upstream_hostport}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+    }
+
+    # API endpoints (si tienes más endpoints de API)
+    reverse_proxy /api/* localhost:3009 {
+        header_up Host {upstream_hostport}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+    }
+
+    # Dashboard (Next.js en puerto 3000)
+    # Nota: Esto debe ir AL FINAL para no interferir con los otros endpoints
+    reverse_proxy /dashboard* localhost:3000 {
+        header_up Host {upstream_hostport}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+        
+        # Soporte para WebSockets de Next.js (Hot Reload en desarrollo)
+        transport http {
+            dial_timeout 30s
+            response_header_timeout 30s
+        }
+    }
+
+    # Headers de seguridad globales
+    header {
+        # Permitir CORS desde cualquier origen (necesario para el bot)
+        Access-Control-Allow-Origin *
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization"
+        
+        # Headers de seguridad básicos
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+        
+        # Remover headers que revelan información del servidor
+        -Server
+        -X-Powered-By
+    }
+
+    # Manejar preflight requests de CORS
+    @options {
+        method OPTIONS
+    }
+    respond @options 204
+}
