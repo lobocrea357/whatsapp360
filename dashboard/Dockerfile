@@ -3,12 +3,13 @@ FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm ci --only=production
 
 # Etapa 2: Construcción de la aplicación
 FROM node:18-alpine AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+COPY package.json package-lock.json* ./
+RUN npm ci
 COPY . .
 RUN npm run build
 
@@ -16,22 +17,29 @@ RUN npm run build
 FROM node:18-alpine AS runner
 WORKDIR /app
 
+# Instalar curl para health checks
+RUN apk add --no-cache curl
+
 ENV NODE_ENV=production
 
 # Crear un usuario y grupo no-root para mayor seguridad
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copiar los artefactos de la compilación standalone
+# Copiar dependencias de producción
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copiar archivos necesarios
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/next.config.mjs ./
+COPY --from=builder /app/package.json ./
 
 # Cambiar al usuario no-root
 USER nextjs
 
 EXPOSE 3000
-ENV PORT 3000
+ENV PORT=3000
 
 # El comando para iniciar el servidor de producción de Next.js
-CMD ["node", "server.js"]
+CMD ["npm", "start"]

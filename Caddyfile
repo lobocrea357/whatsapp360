@@ -1,63 +1,205 @@
-# Configuración de Caddy para WhatsApp Bot con Baileys
-# Este archivo debe estar en /etc/caddy/Caddyfile o donde tengas configurado Caddy
+# Caddyfile para Sistema Multi-Bot WhatsApp + Dashboard
 
-testbot.novapolointranet.xyz {
-    # Habilitar logs para debugging
+# ============================================
+# BOT 1 - Asesor 1
+# ============================================
+bot-uno.novapolointranet.xyz {
     log {
-        output file /var/log/caddy/testbot.log
+        output file /var/log/caddy/bot-uno.log
         level INFO
     }
 
-    # Endpoint para la interfaz web del QR (página principal)
-    reverse_proxy / localhost:3009 {
-        # Caddy maneja automáticamente X-Forwarded-For y X-Forwarded-Proto
-        # Solo necesitamos configurar timeouts para la carga inicial
+    # Reverse proxy a bot1 (puerto 3009)
+    reverse_proxy localhost:3009 {
         transport http {
             dial_timeout 30s
             response_header_timeout 30s
         }
     }
 
-    # Endpoint para el código QR (imagen)
-    reverse_proxy /qr localhost:3009
-
-    # Endpoint para verificar estado de autenticación
-    reverse_proxy /status localhost:3009
-
-    # Endpoint para las conversaciones
-    reverse_proxy /conversations localhost:3009
-
-    # API endpoints (si tienes más endpoints de API)
-    reverse_proxy /api/* localhost:3009
-
-    # Dashboard (Next.js en puerto 3000)
-    # Nota: Esto debe ir AL FINAL para no interferir con los otros endpoints
-    reverse_proxy /dashboard* localhost:3000 {
-        # Soporte para WebSockets de Next.js (Hot Reload en desarrollo)
-        transport http {
-            dial_timeout 30s
-            response_header_timeout 30s
-        }
-    }
-
-    # Headers de seguridad globales
+    # Headers de seguridad y CORS
     header {
-        # Permitir CORS desde cualquier origen (necesario para el bot)
         Access-Control-Allow-Origin *
         Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
         Access-Control-Allow-Headers "Content-Type, Authorization"
-        
-        # Headers de seguridad básicos
         X-Content-Type-Options nosniff
         X-Frame-Options SAMEORIGIN
         Referrer-Policy strict-origin-when-cross-origin
-        
-        # Remover headers que revelan información del servidor
         -Server
         -X-Powered-By
     }
 
     # Manejar preflight requests de CORS
+    @options {
+        method OPTIONS
+    }
+    respond @options 204
+}
+
+# ============================================
+# BOT 2 - Asesor 2
+# ============================================
+bot-dos.novapolointranet.xyz {
+    log {
+        output file /var/log/caddy/bot-dos.log
+        level INFO
+    }
+
+    # Reverse proxy a bot2 (puerto 3010)
+    reverse_proxy localhost:3010 {
+        transport http {
+            dial_timeout 30s
+            response_header_timeout 30s
+        }
+    }
+
+    header {
+        Access-Control-Allow-Origin *
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization"
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+        -Server
+        -X-Powered-By
+    }
+
+    @options {
+        method OPTIONS
+    }
+    respond @options 204
+}
+
+# ============================================
+# BOT 3 - Asesor 3
+# ============================================
+bot-tres.novapolointranet.xyz {
+    log {
+        output file /var/log/caddy/bot-tres.log
+        level INFO
+    }
+
+    # Reverse proxy a bot3 (puerto 3011)
+    reverse_proxy localhost:3011 {
+        transport http {
+            dial_timeout 30s
+            response_header_timeout 30s
+        }
+    }
+
+    header {
+        Access-Control-Allow-Origin *
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization"
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+        -Server
+        -X-Powered-By
+    }
+
+    @options {
+        method OPTIONS
+    }
+    respond @options 204
+}
+
+# ============================================
+# BOT 4 - Asesor 4
+# ============================================
+bot-cuatro.novapolointranet.xyz {
+    log {
+        output file /var/log/caddy/bot-cuatro.log
+        level INFO
+    }
+
+    # Reverse proxy a bot4 (puerto 3012)
+    reverse_proxy localhost:3012 {
+        transport http {
+            dial_timeout 30s
+            response_header_timeout 30s
+        }
+    }
+
+    header {
+        Access-Control-Allow-Origin *
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization"
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+        -Server
+        -X-Powered-By
+    }
+
+    @options {
+        method OPTIONS
+    }
+    respond @options 204
+}
+
+# ============================================
+# BOT 5 - Asesor 5
+# ============================================
+bot-cinco.novapolointranet.xyz {
+    log {
+        output file /var/log/caddy/bot-cinco.log
+        level INFO
+    }
+
+    # Reverse proxy a bot5 (puerto 3013)
+    reverse_proxy localhost:3013 {
+        transport http {
+            dial_timeout 30s
+            response_header_timeout 30s
+        }
+    }
+
+    header {
+        Access-Control-Allow-Origin *
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization"
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+        -Server
+        -X-Powered-By
+    }
+
+    @options {
+        method OPTIONS
+    }
+    respond @options 204
+}
+
+# ============================================
+# DASHBOARD
+# ============================================
+dashboard.novapolointranet.xyz {
+    log {
+        output file /var/log/caddy/dashboard.log
+        level INFO
+    }
+
+    # Reverse proxy al dashboard Next.js (puerto 3000)
+    reverse_proxy localhost:3000 {
+        transport http {
+            dial_timeout 30s
+            response_header_timeout 30s
+        }
+    }
+
+    header {
+        Access-Control-Allow-Origin *
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization"
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+        -Server
+        -X-Powered-By
+    }
+
     @options {
         method OPTIONS
     }
