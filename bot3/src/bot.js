@@ -55,11 +55,7 @@ const main = async () => {
         
         console.log('Creando el proveedor de Baileys...')
         const adapterProvider = createProvider(Provider, {
-            version: [2, 3000, 1025190524],
-            name: `bot_sessions_${BOT_ID}`,
-            gifPlayback: false,
-            usePairingCode: false,
-            phoneNumber: null
+            version: [2, 3000, 1025190524]
         })
         
         console.log('Creando la base de datos en archivo JSON...')
