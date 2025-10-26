@@ -8,6 +8,26 @@ import { startMessageSync } from './src/message-sync.js'
 const app = express()
 const PORT = process.env.API_PORT || 3013; // Puerto diferente para la API
 const BOT_ID = process.env.BOT_IDENTIFIER || 'bot5'
+const QR_PATH = path.join(process.cwd(), 'bot_sessions', `${BOT_ID}.qr.png`);
+const DEFAULT_QR_PATH = path.join(process.cwd(), 'bot.qr.png');
+
+let qrWatcherInterval = null;
+const startQRWatcher = () => {
+    if (qrWatcherInterval) return;
+    qrWatcherInterval = setInterval(() => {
+        if (fs.existsSync(DEFAULT_QR_PATH)) {
+            try {
+                const sessionsDir = path.join(process.cwd(), 'bot_sessions');
+                if (!fs.existsSync(sessionsDir)) fs.mkdirSync(sessionsDir, { recursive: true });
+                fs.copyFileSync(DEFAULT_QR_PATH, QR_PATH);
+                console.log(`✅ QR copiado a: ${QR_PATH}`);
+            } catch (err) {
+                console.error('Error al copiar QR:', err.message);
+            }
+        }
+    }, 2000);
+};
+startQRWatcher();
 const DB_PATH = path.join(process.cwd(), 'db.json')
 
 // Confiar en el proxy (Caddy)
@@ -67,7 +87,7 @@ app.get('/conversations', async (req, res) => {
 
 // Endpoint para servir la imagen del QR
 app.get('/qr', (req, res) => {
-    const qrPath = path.join(process.cwd(), 'bot.qr.png');
+    const qrPath = fs.existsSync(QR_PATH) ? QR_PATH : DEFAULT_QR_PATH;
     fs.access(qrPath, fs.constants.F_OK, (err) => {
         if (err) {
             // Si el QR no existe todavía, envía un 404
@@ -80,7 +100,7 @@ app.get('/qr', (req, res) => {
 
 // Endpoint para verificar el estado de autenticación
 app.get('/status', (req, res) => {
-    const qrPath = path.join(process.cwd(), 'bot.qr.png');
+    const qrPath = fs.existsSync(QR_PATH) ? QR_PATH : DEFAULT_QR_PATH;
     const sessionPath = path.join(process.cwd(), 'bot_sessions');
     
     const qrExists = fs.existsSync(qrPath);

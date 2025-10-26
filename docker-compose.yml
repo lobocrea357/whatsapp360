@@ -21,7 +21,7 @@ services:
     volumes:
       - ./bot1:/app
       - /app/node_modules
-      - bot1_sessions:/app/bot_sessions
+      - bot1_data:/app/bot_sessions
     networks:
       - whatsapp_network
     healthcheck:
@@ -52,7 +52,7 @@ services:
     volumes:
       - ./bot2:/app
       - /app/node_modules
-      - bot2_sessions:/app/bot_sessions
+      - bot2_data:/app/bot_sessions
     networks:
       - whatsapp_network
     healthcheck:
@@ -83,7 +83,7 @@ services:
     volumes:
       - ./bot3:/app
       - /app/node_modules
-      - bot3_sessions:/app/bot_sessions
+      - bot3_data:/app/bot_sessions
     networks:
       - whatsapp_network
     healthcheck:
@@ -114,7 +114,7 @@ services:
     volumes:
       - ./bot4:/app
       - /app/node_modules
-      - bot4_sessions:/app/bot_sessions
+      - bot4_data:/app/bot_sessions
     networks:
       - whatsapp_network
     healthcheck:
@@ -145,7 +145,7 @@ services:
     volumes:
       - ./bot5:/app
       - /app/node_modules
-      - bot5_sessions:/app/bot_sessions
+      - bot5_data:/app/bot_sessions
     networks:
       - whatsapp_network
     healthcheck:
@@ -198,8 +198,8 @@ networks:
 # VOLUMES (para persistir sesiones de WhatsApp)
 # ============================================
 volumes:
-  bot1_sessions:
-  bot2_sessions:
-  bot3_sessions:
-  bot4_sessions:
-  bot5_sessions:
+  bot1_data:
+  bot2_data:
+  bot3_data:
+  bot4_data:
+  bot5_data:
