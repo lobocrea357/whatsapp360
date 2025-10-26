@@ -7,6 +7,7 @@ import { startMessageSync } from './src/message-sync.js'
 
 const app = express()
 const PORT = process.env.API_PORT || 3011; // Puerto diferente para la API
+const BOT_ID = process.env.BOT_IDENTIFIER || 'bot3'
 const DB_PATH = path.join(process.cwd(), 'db.json')
 
 // Confiar en el proxy (Caddy)
@@ -66,7 +67,7 @@ app.get('/conversations', async (req, res) => {
 
 // Endpoint para servir la imagen del QR
 app.get('/qr', (req, res) => {
-    const qrPath = path.join(process.cwd(), 'bot.qr.png');
+    const qrPath = path.join(process.cwd(), `bot.qr.${BOT_ID}.png`);
     fs.access(qrPath, fs.constants.F_OK, (err) => {
         if (err) {
             // Si el QR no existe todavía, envía un 404
@@ -79,8 +80,8 @@ app.get('/qr', (req, res) => {
 
 // Endpoint para verificar el estado de autenticación
 app.get('/status', (req, res) => {
-    const qrPath = path.join(process.cwd(), 'bot.qr.png');
-    const sessionPath = path.join(process.cwd(), 'bot_sessions');
+    const qrPath = path.join(process.cwd(), `bot.qr.${BOT_ID}.png`);
+    const sessionPath = path.join(process.cwd(), `bot_sessions_${BOT_ID}`);
     
     const qrExists = fs.existsSync(qrPath);
     const sessionExists = fs.existsSync(sessionPath) && fs.readdirSync(sessionPath).length > 0;
