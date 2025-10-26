@@ -13,6 +13,7 @@ const openai = new OpenAI({
 })
 
 const PORT = process.env.PORT ?? 3008
+const BOT_ID = process.env.BOT_IDENTIFIER || 'bot5'
 
 /**
  * Convierte un stream de datos en un buffer.
@@ -54,7 +55,11 @@ const main = async () => {
         
         console.log('Creando el proveedor de Baileys...')
         const adapterProvider = createProvider(Provider, {
-            version: [2, 3000, 1025190524]
+            version: [2, 3000, 1025190524],
+            name: `bot_sessions_${BOT_ID}`,
+            gifPlayback: false,
+            usePairingCode: false,
+            phoneNumber: null
         })
         
         console.log('Creando la base de datos en archivo JSON...')
