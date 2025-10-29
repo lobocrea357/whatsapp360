@@ -6,14 +6,14 @@ if (!process.env.SUPABASE_URL) {
     throw new Error('SUPABASE_URL no está configurada en el archivo .env')
 }
 
-if (!process.env.SUPABASE_ANON_KEY) {
-    throw new Error('SUPABASE_ANON_KEY no está configurada en el archivo .env')
+if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY no está configurada en el archivo .env')
 }
 
-// Crear cliente de Supabase
+// Crear cliente de Supabase con SERVICE_ROLE_KEY para bypass RLS
 const supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_ANON_KEY
+    process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
 /**
