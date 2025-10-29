@@ -19,8 +19,6 @@ services:
       - "3001:3001"  # Bot HTTP Server
       - "3009:3009"  # API Server
     volumes:
-      - ./bot1:/app
-      - /app/node_modules
       - bot1_data:/app/bot_sessions
     networks:
       - whatsapp_network
@@ -50,8 +48,6 @@ services:
       - "3002:3002"
       - "3010:3010"
     volumes:
-      - ./bot2:/app
-      - /app/node_modules
       - bot2_data:/app/bot_sessions
     networks:
       - whatsapp_network
@@ -81,8 +77,6 @@ services:
       - "3003:3003"
       - "3011:3011"
     volumes:
-      - ./bot3:/app
-      - /app/node_modules
       - bot3_data:/app/bot_sessions
     networks:
       - whatsapp_network
@@ -112,8 +106,6 @@ services:
       - "3004:3004"
       - "3012:3012"
     volumes:
-      - ./bot4:/app
-      - /app/node_modules
       - bot4_data:/app/bot_sessions
     networks:
       - whatsapp_network
@@ -143,8 +135,6 @@ services:
       - "3005:3005"
       - "3013:3013"
     volumes:
-      - ./bot5:/app
-      - /app/node_modules
       - bot5_data:/app/bot_sessions
     networks:
       - whatsapp_network

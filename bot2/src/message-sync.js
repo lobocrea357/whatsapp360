@@ -1,7 +1,13 @@
 import { join } from 'path'
 import { readFile, watch } from 'fs/promises'
 import { existsSync } from 'fs'
-import { getOrCreateBot, getOrCreateConversation, saveMessage } from './supabase.js'
+import { 
+    getOrCreateBot, 
+    getOrCreateConversation, 
+    saveMessage,
+    cleanDuplicateConversations,
+    cleanDuplicateMessages 
+} from './supabase.js'
 
 const DB_PATH = join(process.cwd(), 'db.json')
 let lastProcessedData = null
@@ -90,6 +96,15 @@ export async function startMessageSync() {
         
         // Inicializar bot
         await initializeBot()
+
+        // Limpiar duplicados existentes al iniciar
+        console.log('🧹 Limpiando duplicados existentes...')
+        try {
+            await cleanDuplicateConversations(bot.id)
+            await cleanDuplicateMessages()
+        } catch (cleanError) {
+            console.error('⚠️ Error al limpiar duplicados (continuando):', cleanError.message)
+        }
 
         // Sincronización inicial
         await syncMessagesToSupabase()
