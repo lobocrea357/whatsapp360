@@ -26,12 +26,12 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app ./
 
 # Exponer los puertos necesarios para Bot 7
-EXPOSE 3007
-EXPOSE 3015
+EXPOSE 3107
+EXPOSE 3115
 
 # Variables de entorno por defecto
-ENV PORT=3007
-ENV API_PORT=3015
+ENV PORT=3107
+ENV API_PORT=3115
 ENV NODE_ENV=production
 
 # Comando para iniciar la aplicación

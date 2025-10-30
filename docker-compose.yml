@@ -156,13 +156,13 @@ services:
     env_file:
       - ./bot6/.env
     environment:
-      - PORT=3006
-      - API_PORT=3014
+      - PORT=3106
+      - API_PORT=3114
       - BOT_NAME=Asesor 6
       - BOT_IDENTIFIER=bot6
     ports:
-      - "3006:3006"
-      - "3014:3014"
+      - "3106:3106"
+      - "3114:3114"
     volumes:
       - bot6_data:/app/bot_sessions
     networks:
@@ -185,13 +185,13 @@ services:
     env_file:
       - ./bot7/.env
     environment:
-      - PORT=3007
-      - API_PORT=3015
+      - PORT=3107
+      - API_PORT=3115
       - BOT_NAME=Asesor 7
       - BOT_IDENTIFIER=bot7
     ports:
-      - "3007:3007"
-      - "3015:3015"
+      - "3107:3107"
+      - "3115:3115"
     volumes:
       - bot7_data:/app/bot_sessions
     networks:
@@ -214,13 +214,13 @@ services:
     env_file:
       - ./bot8/.env
     environment:
-      - PORT=3008
-      - API_PORT=3016
+      - PORT=3108
+      - API_PORT=3116
       - BOT_NAME=Asesor 8
       - BOT_IDENTIFIER=bot8
     ports:
-      - "3008:3008"
-      - "3016:3016"
+      - "3108:3108"
+      - "3116:3116"
     volumes:
       - bot8_data:/app/bot_sessions
     networks:
@@ -243,13 +243,13 @@ services:
     env_file:
       - ./bot9/.env
     environment:
-      - PORT=3009
-      - API_PORT=3017
+      - PORT=3109
+      - API_PORT=3117
       - BOT_NAME=Asesor 9
       - BOT_IDENTIFIER=bot9
     ports:
-      - "3009:3009"
-      - "3017:3017"
+      - "3109:3109"
+      - "3117:3117"
     volumes:
       - bot9_data:/app/bot_sessions
     networks:
@@ -272,13 +272,13 @@ services:
     env_file:
       - ./bot10/.env
     environment:
-      - PORT=3010
-      - API_PORT=3018
+      - PORT=3110
+      - API_PORT=3118
       - BOT_NAME=Asesor 10
       - BOT_IDENTIFIER=bot10
     ports:
-      - "3010:3010"
-      - "3018:3018"
+      - "3110:3110"
+      - "3118:3118"
     volumes:
       - bot10_data:/app/bot_sessions
     networks:

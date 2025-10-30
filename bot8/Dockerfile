@@ -26,12 +26,12 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app ./
 
 # Exponer los puertos necesarios para Bot 8
-EXPOSE 3008
-EXPOSE 3016
+EXPOSE 3108
+EXPOSE 3116
 
 # Variables de entorno por defecto
-ENV PORT=3008
-ENV API_PORT=3016
+ENV PORT=3108
+ENV API_PORT=3116
 ENV NODE_ENV=production
 
 # Comando para iniciar la aplicación

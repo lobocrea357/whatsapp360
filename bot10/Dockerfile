@@ -26,12 +26,12 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app ./
 
 # Exponer los puertos necesarios para Bot 10
-EXPOSE 3010
-EXPOSE 3018
+EXPOSE 3110
+EXPOSE 3118
 
 # Variables de entorno por defecto
-ENV PORT=3010
-ENV API_PORT=3018
+ENV PORT=3110
+ENV API_PORT=3118
 ENV NODE_ENV=production
 
 # Comando para iniciar la aplicación

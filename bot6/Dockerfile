@@ -26,12 +26,12 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app ./
 
 # Exponer los puertos necesarios para Bot 6
-EXPOSE 3006
-EXPOSE 3014
+EXPOSE 3106
+EXPOSE 3114
 
 # Variables de entorno por defecto
-ENV PORT=3006
-ENV API_PORT=3014
+ENV PORT=3106
+ENV API_PORT=3114
 ENV NODE_ENV=production
 
 # Comando para iniciar la aplicación

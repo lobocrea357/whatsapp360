@@ -26,12 +26,12 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app ./
 
 # Exponer los puertos necesarios para Bot 9
-EXPOSE 3009
-EXPOSE 3017
+EXPOSE 3109
+EXPOSE 3117
 
 # Variables de entorno por defecto
-ENV PORT=3009
-ENV API_PORT=3017
+ENV PORT=3109
+ENV API_PORT=3117
 ENV NODE_ENV=production
 
 # Comando para iniciar la aplicación
