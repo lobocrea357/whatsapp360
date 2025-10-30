@@ -55,7 +55,14 @@ const main = async () => {
         
         console.log('Creando el proveedor de Baileys...')
         const adapterProvider = createProvider(Provider, {
-            version: [2, 3000, 1025190524]
+            version: [2, 3000, 1025190524],
+            retryRequestDelayMs: 350,
+            maxMsgRetryCount: 3,
+            connectTimeoutMs: 60000,
+            defaultQueryTimeoutMs: 60000,
+            keepAliveIntervalMs: 30000,
+            emitOwnEvents: true,
+            markOnlineOnConnect: true
         })
         
         console.log('Creando la base de datos en archivo JSON...')
@@ -72,6 +79,26 @@ const main = async () => {
         })
         
         console.log('Instancia del bot creada.')
+
+        // Manejar errores de autenticación
+        adapterProvider.on('auth_failure', async (error) => {
+            console.error('⚡⚡ ERROR AUTH ⚡⚡');
+            console.error('Error de autenticación:', error);
+            console.log('🔄 Limpiando sesión corrupta y reiniciando...');
+            
+            // Limpiar archivos de sesión
+            const sessionPath = join(process.cwd(), 'bot_sessions');
+            if (fs.existsSync(sessionPath)) {
+                fs.rmSync(sessionPath, { recursive: true, force: true });
+                console.log('✅ Sesión limpiada');
+            }
+            
+            // Reiniciar después de 5 segundos
+            setTimeout(() => {
+                console.log('🔄 Reiniciando bot...');
+                process.exit(1); // Nodemon lo reiniciará automáticamente
+            }, 5000);
+        });
 
         adapterProvider.on('ready', () => {
             const sock = adapterProvider.getInstance()

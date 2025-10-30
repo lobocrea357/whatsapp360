@@ -12,6 +12,9 @@ const QR_PATH = path.join(process.cwd(), 'bot_sessions', `${BOT_ID}.qr.png`);
 const DEFAULT_QR_PATH = path.join(process.cwd(), 'bot.qr.png');
 
 let qrWatcherInterval = null;
+let qrCopyCount = 0;
+const MAX_QR_COPIES = 30; // Máximo 30 copias (2.5 minutos)
+
 const startQRWatcher = () => {
     if (qrWatcherInterval) return;
     qrWatcherInterval = setInterval(() => {
@@ -20,12 +23,23 @@ const startQRWatcher = () => {
                 const sessionsDir = path.join(process.cwd(), 'bot_sessions');
                 if (!fs.existsSync(sessionsDir)) fs.mkdirSync(sessionsDir, { recursive: true });
                 fs.copyFileSync(DEFAULT_QR_PATH, QR_PATH);
-                console.log(`✅ QR copiado a: ${QR_PATH}`);
+                qrCopyCount++;
+                
+                if (qrCopyCount % 10 === 0) {
+                    console.log(`✅ QR copiado a: ${QR_PATH} (${qrCopyCount} veces)`);
+                }
+                
+                // Detener después de muchos intentos para evitar bucle infinito
+                if (qrCopyCount >= MAX_QR_COPIES) {
+                    console.log(`⚠️ Se alcanzó el límite de copias de QR. Deteniendo watcher.`);
+                    clearInterval(qrWatcherInterval);
+                    qrWatcherInterval = null;
+                }
             } catch (err) {
                 console.error('Error al copiar QR:', err.message);
             }
         }
-    }, 2000);
+    }, 5000); // Cambiado de 2000ms a 5000ms
 };
 startQRWatcher();
 const DB_PATH = path.join(process.cwd(), 'db.json')
