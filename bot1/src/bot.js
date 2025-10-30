@@ -68,7 +68,7 @@ const main = async () => {
             provider: adapterProvider,
             database: adapterDB,
         }, {
-            port: 3001
+            port: PORT
         })
         
         console.log('Instancia del bot creada.')
