@@ -144,6 +144,151 @@ services:
       timeout: 10s
       retries: 3
 
+  # ============================================
+  # BOT 6 - Asesor 6
+  # ============================================
+  bot6:
+    build:
+      context: ./bot6
+      dockerfile: Dockerfile
+    container_name: bot6_asesor6
+    restart: unless-stopped
+    env_file:
+      - ./bot6/.env
+    environment:
+      - PORT=3006
+      - API_PORT=3014
+      - BOT_NAME=Asesor 6
+      - BOT_IDENTIFIER=bot6
+    ports:
+      - "3006:3006"
+      - "3014:3014"
+    volumes:
+      - bot6_sessions:/app/baileys_store_multi
+    networks:
+      - whatsapp_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3014/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # BOT 7 - Asesor 7
+  # ============================================
+  bot7:
+    build:
+      context: ./bot7
+      dockerfile: Dockerfile
+    container_name: bot7_asesor7
+    restart: unless-stopped
+    env_file:
+      - ./bot7/.env
+    environment:
+      - PORT=3007
+      - API_PORT=3015
+      - BOT_NAME=Asesor 7
+      - BOT_IDENTIFIER=bot7
+    ports:
+      - "3007:3007"
+      - "3015:3015"
+    volumes:
+      - bot7_sessions:/app/baileys_store_multi
+    networks:
+      - whatsapp_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3015/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # BOT 8 - Asesor 8
+  # ============================================
+  bot8:
+    build:
+      context: ./bot8
+      dockerfile: Dockerfile
+    container_name: bot8_asesor8
+    restart: unless-stopped
+    env_file:
+      - ./bot8/.env
+    environment:
+      - PORT=3008
+      - API_PORT=3016
+      - BOT_NAME=Asesor 8
+      - BOT_IDENTIFIER=bot8
+    ports:
+      - "3008:3008"
+      - "3016:3016"
+    volumes:
+      - bot8_sessions:/app/baileys_store_multi
+    networks:
+      - whatsapp_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3016/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # BOT 9 - Asesor 9
+  # ============================================
+  bot9:
+    build:
+      context: ./bot9
+      dockerfile: Dockerfile
+    container_name: bot9_asesor9
+    restart: unless-stopped
+    env_file:
+      - ./bot9/.env
+    environment:
+      - PORT=3009
+      - API_PORT=3017
+      - BOT_NAME=Asesor 9
+      - BOT_IDENTIFIER=bot9
+    ports:
+      - "3009:3009"
+      - "3017:3017"
+    volumes:
+      - bot9_sessions:/app/baileys_store_multi
+    networks:
+      - whatsapp_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3017/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # BOT 10 - Asesor 10
+  # ============================================
+  bot10:
+    build:
+      context: ./bot10
+      dockerfile: Dockerfile
+    container_name: bot10_asesor10
+    restart: unless-stopped
+    env_file:
+      - ./bot10/.env
+    environment:
+      - PORT=3010
+      - API_PORT=3018
+      - BOT_NAME=Asesor 10
+      - BOT_IDENTIFIER=bot10
+    ports:
+      - "3010:3010"
+      - "3018:3018"
+    volumes:
+      - bot10_sessions:/app/baileys_store_multi
+    networks:
+      - whatsapp_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3018/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 # ============================================
 # NETWORKS
 # ============================================
@@ -160,3 +305,8 @@ volumes:
   bot3_sessions:
   bot4_sessions:
   bot5_sessions:
+  bot6_sessions:
+  bot7_sessions:
+  bot8_sessions:
+  bot9_sessions:
+  bot10_sessions:

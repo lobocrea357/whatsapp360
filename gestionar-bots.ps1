@@ -7,7 +7,7 @@ param(
     [string]$Accion = "ayuda",
     
     [Parameter(Mandatory=$false)]
-    [ValidateSet("1", "2", "3", "4", "5", "todos")]
+    [ValidateSet("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "todos")]
     [string]$Bot = "todos"
 )
 
@@ -20,6 +20,11 @@ $bots = @{
     "3" = @{ Nombre = "Bot 3 (Asesor 3)"; Puerto = 3003; API = 3011; Dir = "bot3" }
     "4" = @{ Nombre = "Bot 4 (Asesor 4)"; Puerto = 3004; API = 3012; Dir = "bot4" }
     "5" = @{ Nombre = "Bot 5 (Asesor 5)"; Puerto = 3005; API = 3013; Dir = "bot5" }
+    "6" = @{ Nombre = "Bot 6 (Asesor 6)"; Puerto = 3006; API = 3014; Dir = "bot6" }
+    "7" = @{ Nombre = "Bot 7 (Asesor 7)"; Puerto = 3007; API = 3015; Dir = "bot7" }
+    "8" = @{ Nombre = "Bot 8 (Asesor 8)"; Puerto = 3008; API = 3016; Dir = "bot8" }
+    "9" = @{ Nombre = "Bot 9 (Asesor 9)"; Puerto = 3009; API = 3017; Dir = "bot9" }
+    "10" = @{ Nombre = "Bot 10 (Asesor 10)"; Puerto = 3010; API = 3018; Dir = "bot10" }
 }
 
 function Show-Header {
@@ -48,6 +53,11 @@ function Show-Help {
     Write-Host "  3         - Bot 3 (Asesor 3) - Puertos: 3003/3011" -ForegroundColor White
     Write-Host "  4         - Bot 4 (Asesor 4) - Puertos: 3004/3012" -ForegroundColor White
     Write-Host "  5         - Bot 5 (Asesor 5) - Puertos: 3005/3013" -ForegroundColor White
+    Write-Host "  6         - Bot 6 (Asesor 6) - Puertos: 3006/3014" -ForegroundColor White
+    Write-Host "  7         - Bot 7 (Asesor 7) - Puertos: 3007/3015" -ForegroundColor White
+    Write-Host "  8         - Bot 8 (Asesor 8) - Puertos: 3008/3016" -ForegroundColor White
+    Write-Host "  9         - Bot 9 (Asesor 9) - Puertos: 3009/3017" -ForegroundColor White
+    Write-Host "  10        - Bot 10 (Asesor 10) - Puertos: 3010/3018" -ForegroundColor White
     Write-Host "  todos     - Todos los bots" -ForegroundColor White
     Write-Host ""
     Write-Host "EJEMPLOS:" -ForegroundColor Green
