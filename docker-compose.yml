@@ -226,7 +226,7 @@ services:
     networks:
       - whatsapp_network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3016/status"]
+      test: ["CMD", "curl", "-f", "http://localhost:3116/status"]
       interval: 30s
       timeout: 10s
       retries: 3
